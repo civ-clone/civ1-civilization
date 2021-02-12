@@ -1,7 +1,34 @@
-import { American } from './Civilizations';
-import Civilization from '@civ-clone/core-civilization/Civilization';
+import {
+  American,
+  Aztec,
+  Babylonian,
+  Chinese,
+  Egyptian,
+  English,
+  French,
+  German,
+  Greek,
+  Indian,
+  Mongol,
+  Roman,
+  Russian,
+  Zulu,
+} from './Civilizations';
 import { instance as civilizationRegistryInstance } from '@civ-clone/core-civilization/CivilizationRegistry';
 
-[American].forEach((CivilizationType: typeof Civilization) =>
-  civilizationRegistryInstance.register(CivilizationType)
+civilizationRegistryInstance.register(
+  American,
+  Aztec,
+  Babylonian,
+  Chinese,
+  Egyptian,
+  English,
+  French,
+  German,
+  Greek,
+  Indian,
+  Mongol,
+  Roman,
+  Russian,
+  Zulu
 );

@@ -9,5 +9,6 @@ export { German } from '@civ-clone/base-civilization-german/German';
 export { Greek } from '@civ-clone/base-civilization-greek/Greek';
 export { Indian } from '@civ-clone/base-civilization-indian/Indian';
 export { Mongol } from '@civ-clone/base-civilization-mongol/Mongol';
+export { Roman } from '@civ-clone/base-civilization-roman/Roman';
 export { Russian } from '@civ-clone/base-civilization-russian/Russian';
 export { Zulu } from '@civ-clone/base-civilization-zulu/Zulu';

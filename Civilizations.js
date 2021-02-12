@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Zulu = exports.Russian = exports.Mongol = exports.Indian = exports.Greek = exports.German = exports.French = exports.English = exports.Egyptian = exports.Chinese = exports.Babylonian = exports.Aztec = exports.American = void 0;
+exports.Zulu = exports.Russian = exports.Roman = exports.Mongol = exports.Indian = exports.Greek = exports.German = exports.French = exports.English = exports.Egyptian = exports.Chinese = exports.Babylonian = exports.Aztec = exports.American = void 0;
 var American_1 = require("@civ-clone/base-civilization-american/American");
 Object.defineProperty(exports, "American", { enumerable: true, get: function () { return American_1.American; } });
 var Aztec_1 = require("@civ-clone/base-civilization-aztec/Aztec");
@@ -23,6 +23,8 @@ var Indian_1 = require("@civ-clone/base-civilization-indian/Indian");
 Object.defineProperty(exports, "Indian", { enumerable: true, get: function () { return Indian_1.Indian; } });
 var Mongol_1 = require("@civ-clone/base-civilization-mongol/Mongol");
 Object.defineProperty(exports, "Mongol", { enumerable: true, get: function () { return Mongol_1.Mongol; } });
+var Roman_1 = require("@civ-clone/base-civilization-roman/Roman");
+Object.defineProperty(exports, "Roman", { enumerable: true, get: function () { return Roman_1.Roman; } });
 var Russian_1 = require("@civ-clone/base-civilization-russian/Russian");
 Object.defineProperty(exports, "Russian", { enumerable: true, get: function () { return Russian_1.Russian; } });
 var Zulu_1 = require("@civ-clone/base-civilization-zulu/Zulu");
