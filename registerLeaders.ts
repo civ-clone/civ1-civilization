@@ -14,21 +14,30 @@ import {
   JosephStalin,
   Shaka,
 } from './Leaders';
-import { instance as leaderRegistryInstance } from '@civ-clone/core-civilization/LeaderRegistry';
+import {
+  LeaderRegistry,
+  instance as leaderRegistryInstance,
+} from '@civ-clone/core-civilization/LeaderRegistry';
 
-leaderRegistryInstance.register(
-  AbrahamLincoln,
-  MoctezumaII,
-  Hammurabi,
-  MaoZedong,
-  RamessesII,
-  ElizabethI,
-  NapoleonI,
-  FrederickTheGreat,
-  AlexanderTheGreat,
-  MahatmaGandhi,
-  GenghisKhan,
-  JuliusCaesar,
-  JosephStalin,
-  Shaka
-);
+export const registerLeaders: (leaderRegistry?: LeaderRegistry) => void = (
+  leaderRegistry: LeaderRegistry = leaderRegistryInstance
+): void => {
+  leaderRegistry.register(
+    AbrahamLincoln,
+    MoctezumaII,
+    Hammurabi,
+    MaoZedong,
+    RamessesII,
+    ElizabethI,
+    NapoleonI,
+    FrederickTheGreat,
+    AlexanderTheGreat,
+    MahatmaGandhi,
+    GenghisKhan,
+    JuliusCaesar,
+    JosephStalin,
+    Shaka
+  );
+};
+
+export default registerLeaders;
