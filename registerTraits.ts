@@ -44,25 +44,24 @@ export const registerTraits: (traitRegistry?: TraitRegistry) => void = (
   traitRegistry: TraitRegistry = traitRegistryInstance
 ): void => {
   // @see https://www.civfanatics.com/civ1/cia/allcivs.htm
-  ([
-    [AbrahamLincoln, Friendly, NormalDevelopment, Civilized],
-    [MoctezumaII, NormalAggression, Perfectionist, Civilized],
-    [Hammurabi, Friendly, Perfectionist, Civilized],
-    [MaoZedong, NormalAggression, NormalDevelopment, Civilized],
-    [RamessesII, NormalAggression, NormalDevelopment, Civilized],
-    [ElizabethI, NormalAggression, Expansionist, NormalMilitarism],
-    [NapoleonI, Aggressive, Expansionist, Civilized],
-    [FrederickTheGreat, Aggressive, Perfectionist, Civilized],
-    [AlexanderTheGreat, NormalAggression, Expansionist, Militaristic],
-    [MahatmaGandhi, Friendly, Perfectionist, NormalMilitarism],
-    [GenghisKhan, Aggressive, Expansionist, Militaristic],
-    [JuliusCaesar, NormalAggression, Expansionist, Civilized],
-    [JosephStalin, Aggressive, NormalDevelopment, Militaristic],
-    [Shaka, Aggressive, NormalDevelopment, NormalMilitarism],
-  ] as [
-    typeof Leader,
-    ...LeaderTrait[]
-  ][]).forEach(([LeaderType, ...traits]): void =>
+  (
+    [
+      [AbrahamLincoln, Friendly, NormalDevelopment, Civilized],
+      [MoctezumaII, NormalAggression, Perfectionist, Civilized],
+      [Hammurabi, Friendly, Perfectionist, Civilized],
+      [MaoZedong, NormalAggression, NormalDevelopment, Civilized],
+      [RamessesII, NormalAggression, NormalDevelopment, Civilized],
+      [ElizabethI, NormalAggression, Expansionist, NormalMilitarism],
+      [NapoleonI, Aggressive, Expansionist, Civilized],
+      [FrederickTheGreat, Aggressive, Perfectionist, Civilized],
+      [AlexanderTheGreat, NormalAggression, Expansionist, Militaristic],
+      [MahatmaGandhi, Friendly, Perfectionist, NormalMilitarism],
+      [GenghisKhan, Aggressive, Expansionist, Militaristic],
+      [JuliusCaesar, NormalAggression, Expansionist, Civilized],
+      [JosephStalin, Aggressive, NormalDevelopment, Militaristic],
+      [Shaka, Aggressive, NormalDevelopment, NormalMilitarism],
+    ] as [typeof Leader, ...LeaderTrait[]][]
+  ).forEach(([LeaderType, ...traits]): void =>
     traits.forEach((TraitType: LeaderTrait): void =>
       traitRegistry.register(new TraitType(LeaderType))
     )
