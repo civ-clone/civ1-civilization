@@ -1,14 +1,16 @@
-export { American } from '@civ-clone/base-civilization-american/American';
-export { Aztec } from '@civ-clone/base-civilization-aztec/Aztec';
-export { Babylonian } from '@civ-clone/base-civilization-babylonian/Babylonian';
-export { Chinese } from '@civ-clone/base-civilization-chinese/Chinese';
-export { Egyptian } from '@civ-clone/base-civilization-egyptian/Egyptian';
-export { English } from '@civ-clone/base-civilization-english/English';
-export { French } from '@civ-clone/base-civilization-french/French';
-export { German } from '@civ-clone/base-civilization-german/German';
-export { Greek } from '@civ-clone/base-civilization-greek/Greek';
-export { Indian } from '@civ-clone/base-civilization-indian/Indian';
-export { Mongol } from '@civ-clone/base-civilization-mongol/Mongol';
-export { Roman } from '@civ-clone/base-civilization-roman/Roman';
-export { Russian } from '@civ-clone/base-civilization-russian/Russian';
-export { Zulu } from '@civ-clone/base-civilization-zulu/Zulu';
+export {
+  American,
+  Aztec,
+  Babylonian,
+  Chinese,
+  Egyptian,
+  English,
+  French,
+  German,
+  Greek,
+  Indian,
+  Mongol,
+  Roman,
+  Russian,
+  Zulu,
+} from '@civ-clone/library-civilization/Civilizations';

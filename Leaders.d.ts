@@ -1,14 +1,16 @@
-export { AbrahamLincoln } from '@civ-clone/base-civilization-american/Leaders';
-export { MoctezumaII } from '@civ-clone/base-civilization-aztec/Leaders';
-export { Hammurabi } from '@civ-clone/base-civilization-babylonian/Leaders';
-export { MaoZedong } from '@civ-clone/base-civilization-chinese/Leaders';
-export { RamessesII } from '@civ-clone/base-civilization-egyptian/Leaders';
-export { ElizabethI } from '@civ-clone/base-civilization-english/Leaders';
-export { NapoleonI } from '@civ-clone/base-civilization-french/Leaders';
-export { FrederickTheGreat } from '@civ-clone/base-civilization-german/Leaders';
-export { AlexanderTheGreat } from '@civ-clone/base-civilization-greek/Leaders';
-export { MahatmaGandhi } from '@civ-clone/base-civilization-indian/Leaders';
-export { GenghisKhan } from '@civ-clone/base-civilization-mongol/Leaders';
-export { JuliusCaesar } from '@civ-clone/base-civilization-roman/Leaders';
-export { JosephStalin } from '@civ-clone/base-civilization-russian/Leaders';
-export { Shaka } from '@civ-clone/base-civilization-zulu/Leaders';
+export {
+  AbrahamLincoln,
+  MoctezumaII,
+  Hammurabi,
+  MaoZedong,
+  RamessesII,
+  ElizabethI,
+  NapoleonI,
+  FrederickTheGreat,
+  AlexanderTheGreat,
+  MahatmaGandhi,
+  GenghisKhan,
+  JuliusCaesar,
+  JosephStalin,
+  Shaka,
+} from '@civ-clone/library-civilization/Leaders';

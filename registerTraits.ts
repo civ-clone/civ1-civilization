@@ -15,19 +15,21 @@ import {
   Shaka,
 } from './Leaders';
 import {
+  Aggressive,
+  Civilized,
+  Expansionist,
+  Friendly,
+  Militaristic,
+  NormalAggression,
+  NormalDevelopment,
+  NormalMilitarism,
+  Perfectionist,
+} from './Traits';
+import {
   TraitRegistry,
   instance as traitRegistryInstance,
 } from '@civ-clone/core-civilization/TraitRegistry';
-import Aggressive from '@civ-clone/base-leader-trait-aggression/Aggression/Aggressive';
-import Civilized from '@civ-clone/base-leader-trait-militarism/Militarism/Civilized';
-import Expansionist from '@civ-clone/base-leader-trait-development/Development/Expansionist';
-import Friendly from '@civ-clone/base-leader-trait-aggression/Aggression/Friendly';
 import Leader from '@civ-clone/core-civilization/Leader';
-import Militaristic from '@civ-clone/base-leader-trait-militarism/Militarism/Militaristic';
-import NormalAggression from '@civ-clone/base-leader-trait-aggression/Aggression/Normal';
-import NormalDevelopment from '@civ-clone/base-leader-trait-development/Development/Normal';
-import NormalMilitarism from '@civ-clone/base-leader-trait-militarism/Militarism/Normal';
-import Perfectionist from '@civ-clone/base-leader-trait-development/Development/Perfectionist';
 
 type LeaderTrait =
   | typeof Friendly
