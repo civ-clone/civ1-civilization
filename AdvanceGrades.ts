@@ -2,7 +2,7 @@
 //  (OpenCivOne `Segment_1ade.cs` `F0_1ade_2317`). A grade is `base` + Ideology × `ideology`, where Ideology is −1 for a
 //  Militaristic leader, 0 for a normal one and 1 for a Civilized one. The pairs are the signed bytes of the 72-entry
 //  table at DS:0x0b0a, read from OpenCivOne's `BinaryResources.bin` in the order of its `TechnologyAdvanceEnum`. Future
-//  Technology's are 0, so it's never chosen while anything else is available.
+//  Technology entries are 0, so it's never chosen while anything else is available.
 import {
   AdvancedFlight,
   Alphabet,

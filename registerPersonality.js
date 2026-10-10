@@ -9,7 +9,6 @@ exports.register = exports.personalityRules = void 0;
 //  rule here comes from one place its AI reads them, or from a decision taken where it departs from them.
 const Traits_1 = require("./Traits");
 const Advances_1 = require("@civ-clone/civ1-science/Advances");
-const core_game_1 = require("@civ-clone/core-game");
 const AdvanceGrade_1 = require("@civ-clone/base-leader-personality/Rules/Player/AdvanceGrade");
 const AttackConfidence_1 = require("@civ-clone/base-leader-personality/Rules/Player/AttackConfidence");
 const BuildWeight_1 = require("@civ-clone/base-leader-personality/Rules/Player/BuildWeight");
@@ -43,8 +42,8 @@ const personalityRules = (traitRegistry) => {
         // The Republic: each attacking unit away from its city counts 7 − Ideology against it, 5 − Ideology with a
         //  Marketplace (`CityWorker.cs` ~L1978).
         ...ideologies.map(([TraitType, ideology]) => new MilitaryUnhappinessTolerance_1.default(has(TraitType), new Effect_1.default(() => ideology))),
-        // When science stops. v474.05 stops every AI's at Robotics. Here Robotics is only where the shortest list ends
-        //  (civ-clone/web-renderer#155):
+        // When science stops. v474.05 stops every AI's science at Robotics. Here Robotics is only where the shortest list
+        //  ends (civ-clone/web-renderer#155):
         //  - Militaristic leaders want nothing beyond it. Genghis Khan stops at Robotics, as in Civ1;
         //  - normal militarism adds Recycling and Nuclear Power, which keep cities productive and clean. Gandhi carries on
         //    until he has both;
@@ -90,6 +89,5 @@ const personalityRules = (traitRegistry) => {
 exports.personalityRules = personalityRules;
 const register = (game) => game.rules.register(...(0, exports.personalityRules)(game.traits));
 exports.register = register;
-(0, exports.register)(core_game_1.defaultGame);
 exports.default = exports.register;
 //# sourceMappingURL=registerPersonality.js.map

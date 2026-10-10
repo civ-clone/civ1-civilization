@@ -1,1 +1,1 @@
-import './registerPersonality';
+export {};
