@@ -24,7 +24,7 @@ import {
   SpaceFlight,
   Superconductor,
 } from '@civ-clone/civ1-science/Advances';
-import { Game, defaultGame } from '@civ-clone/core-game';
+import { Game } from '@civ-clone/core-game';
 import Advance from '@civ-clone/core-science/Advance';
 import AdvanceGrade from '@civ-clone/base-leader-personality/Rules/Player/AdvanceGrade';
 import AttackConfidence from '@civ-clone/base-leader-personality/Rules/Player/AttackConfidence';
@@ -84,8 +84,8 @@ export const personalityRules = (traitRegistry: TraitRegistry): Rule[] => {
         )
     ),
 
-    // When science stops. v474.05 stops every AI's at Robotics. Here Robotics is only where the shortest list ends
-    //  (civ-clone/web-renderer#155):
+    // When science stops. v474.05 stops every AI's science at Robotics. Here Robotics is only where the shortest list
+    //  ends (civ-clone/web-renderer#155):
     //  - Militaristic leaders want nothing beyond it. Genghis Khan stops at Robotics, as in Civ1;
     //  - normal militarism adds Recycling and Nuclear Power, which keep cities productive and clean. Gandhi carries on
     //    until he has both;
@@ -169,7 +169,5 @@ export const personalityRules = (traitRegistry: TraitRegistry): Rule[] => {
 
 export const register = (game: Game): void =>
   game.rules.register(...personalityRules(game.traits));
-
-register(defaultGame);
 
 export default register;
