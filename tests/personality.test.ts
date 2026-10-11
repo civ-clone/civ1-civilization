@@ -40,7 +40,9 @@ import TraitRegistry from '@civ-clone/core-civilization/TraitRegistry';
 import WantedAdvances from '@civ-clone/base-leader-personality/Rules/Player/WantedAdvances';
 import Wonder from '@civ-clone/core-wonder/Wonder';
 import CityImprovement from '@civ-clone/core-city-improvement/CityImprovement';
+import Diplomatic from '@civ-clone/base-unit-type-diplomatic/Diplomatic';
 import Unit from '@civ-clone/core-unit/Unit';
+import Worker from '@civ-clone/base-unit-type-worker/Worker';
 import advanceGrades from '../AdvanceGrades';
 import { expect } from 'chai';
 import { personalityRules } from '../registerPersonality';
@@ -49,6 +51,8 @@ import registerTraits from '../registerTraits';
 class Temple extends CityImprovement {}
 class Pyramids extends Wonder {}
 class Militia extends Unit {}
+class Settlers extends Worker {}
+class Caravan extends Diplomatic {}
 
 const traitRegistry = new TraitRegistry(),
   ruleRegistry = new RuleRegistry();
@@ -108,7 +112,7 @@ describe('Civ1 personalities', (): void => {
     expect(product(ruleRegistry, Expansion, lincoln)).closeTo(6 / 5, 1e-9);
   });
 
-  it('weighs improvements, not Wonders or units, by Ideology', (): void => {
+  it('weighs improvements and military units, not Wonders, Settlers or Caravans, by Ideology', (): void => {
     expect(product(ruleRegistry, BuildWeight, lincoln, Temple)).closeTo(
       4 / 3,
       1e-9
@@ -119,7 +123,17 @@ describe('Civ1 personalities', (): void => {
     );
     expect(product(ruleRegistry, BuildWeight, gandhi, Temple)).equal(1);
     expect(product(ruleRegistry, BuildWeight, lincoln, Pyramids)).equal(1);
-    expect(product(ruleRegistry, BuildWeight, genghisKhan, Militia)).equal(1);
+    expect(product(ruleRegistry, BuildWeight, lincoln, Militia)).closeTo(
+      2 / 3,
+      1e-9
+    );
+    expect(product(ruleRegistry, BuildWeight, genghisKhan, Militia)).closeTo(
+      4 / 3,
+      1e-9
+    );
+    expect(product(ruleRegistry, BuildWeight, gandhi, Militia)).equal(1);
+    expect(product(ruleRegistry, BuildWeight, genghisKhan, Settlers)).equal(1);
+    expect(product(ruleRegistry, BuildWeight, lincoln, Caravan)).equal(1);
   });
 
   it("grades advances by v474.05's table", (): void => {

@@ -13,16 +13,23 @@ const AdvanceGrade_1 = require("@civ-clone/base-leader-personality/Rules/Player/
 const AttackConfidence_1 = require("@civ-clone/base-leader-personality/Rules/Player/AttackConfidence");
 const BuildWeight_1 = require("@civ-clone/base-leader-personality/Rules/Player/BuildWeight");
 const CityImprovement_1 = require("@civ-clone/core-city-improvement/CityImprovement");
+const Diplomatic_1 = require("@civ-clone/base-unit-type-diplomatic/Diplomatic");
 const Effect_1 = require("@civ-clone/core-rule/Effect");
 const Expansion_1 = require("@civ-clone/base-leader-personality/Rules/Player/Expansion");
 const MilitaryUnhappinessTolerance_1 = require("@civ-clone/base-leader-personality/Rules/Player/MilitaryUnhappinessTolerance");
 const ScienceBias_1 = require("@civ-clone/base-leader-personality/Rules/Player/ScienceBias");
 const WantedAdvances_1 = require("@civ-clone/base-leader-personality/Rules/Player/WantedAdvances");
+const Unit_1 = require("@civ-clone/core-unit/Unit");
 const Wonder_1 = require("@civ-clone/core-wonder/Wonder");
+const Worker_1 = require("@civ-clone/base-unit-type-worker/Worker");
 const AdvanceGrades_1 = require("./AdvanceGrades");
 const leaderHas_1 = require("@civ-clone/base-leader-personality/lib/leaderHas");
 const isImprovement = (item) => Object.prototype.isPrototypeOf.call(CityImprovement_1.default, item) &&
     !Object.prototype.isPrototypeOf.call(Wonder_1.default, item);
+// A unit built to fight: not Settlers or another worker, and not a Diplomat or Caravan.
+const isMilitary = (item) => Object.prototype.isPrototypeOf.call(Unit_1.default, item) &&
+    !Object.prototype.isPrototypeOf.call(Worker_1.default, item) &&
+    !Object.prototype.isPrototypeOf.call(Diplomatic_1.default, item);
 const gradesByAdvance = new Map(AdvanceGrades_1.default.map(([AdvanceType, base, ideology]) => [
     AdvanceType,
     [base, ideology],
@@ -74,7 +81,15 @@ const personalityRules = (traitRegistry) => {
         ...ideologies.map(([TraitType, ideology]) => new Expansion_1.default(has(TraitType), new Effect_1.default(() => 6 / (6 - ideology)))),
         // Improvements. v474.05's production menu multiplies an improvement's score by 3 / (Ideology + 3), and builds
         //  the lowest, so a Civilized leader favours them by 4/3 and a Militaristic one by 2/3. Wonders aren't scaled.
-        ...ideologies.map(([TraitType, ideology]) => new BuildWeight_1.default(has(TraitType), new Effect_1.default((player, item) => isImprovement(item) ? (ideology + 3) / 3 : 1))),
+        //  Military units are weighed the other way, (3 − Ideology) / 3, which v474.05 doesn't do: its scores sit close
+        //  together, but here a unit a computer player needs outscores any improvement it doesn't by far more than 4/3,
+        //  so the lean only showed once units leant too (civ-clone/web-renderer#378). Settlers (`Expansion`), Diplomats
+        //  and Caravans aren't scaled.
+        ...ideologies.map(([TraitType, ideology]) => new BuildWeight_1.default(has(TraitType), new Effect_1.default((player, item) => isImprovement(item)
+            ? (ideology + 3) / 3
+            : isMilitary(item)
+                ? (3 - ideology) / 3
+                : 1))),
         // Research: v474.05 grades each advance `base` + Ideology × `ideology` (`AdvanceGrades`).
         new AdvanceGrade_1.default(new Effect_1.default((player, AdvanceType) => { var _a, _b; return (_b = (_a = gradesByAdvance.get(AdvanceType)) === null || _a === void 0 ? void 0 : _a[0]) !== null && _b !== void 0 ? _b : 0; })),
         ...ideologies.map(([TraitType, ideology]) => new AdvanceGrade_1.default(has(TraitType), new Effect_1.default((player, AdvanceType) => { var _a, _b; return ideology * ((_b = (_a = gradesByAdvance.get(AdvanceType)) === null || _a === void 0 ? void 0 : _a[1]) !== null && _b !== void 0 ? _b : 0); }))),
