@@ -17,7 +17,6 @@
     "ts:compile": "tsc --build tsconfig.json"
   },
   "devDependencies": {
-    "@civ-clone/core-unit": "^0.1.24",
     "@types/chai": "^4.0",
     "@types/mocha": "^9.0",
     "@types/node": "^14.0",
@@ -29,6 +28,8 @@
   },
   "dependencies": {
     "@civ-clone/base-leader-personality": "^0.1.0",
+    "@civ-clone/base-unit-type-diplomatic": "^0.1.0",
+    "@civ-clone/base-unit-type-worker": "^0.1.0",
     "@civ-clone/civ1-science": "github:civ-clone/civ1-science",
     "@civ-clone/core-city-improvement": "^0.1.7",
     "@civ-clone/core-civilization": "^0.1.7",
@@ -36,6 +37,7 @@
     "@civ-clone/core-player": "^0.1.10",
     "@civ-clone/core-rule": "^0.1.6",
     "@civ-clone/core-science": "^0.1.6",
+    "@civ-clone/core-unit": "^0.1.24",
     "@civ-clone/core-wonder": "^0.1.5",
     "@civ-clone/library-civilization": "^0.1.0"
   }

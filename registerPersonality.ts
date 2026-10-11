@@ -30,6 +30,7 @@ import AdvanceGrade from '@civ-clone/base-leader-personality/Rules/Player/Advanc
 import AttackConfidence from '@civ-clone/base-leader-personality/Rules/Player/AttackConfidence';
 import BuildWeight from '@civ-clone/base-leader-personality/Rules/Player/BuildWeight';
 import CityImprovement from '@civ-clone/core-city-improvement/CityImprovement';
+import Diplomatic from '@civ-clone/base-unit-type-diplomatic/Diplomatic';
 import Effect from '@civ-clone/core-rule/Effect';
 import Expansion from '@civ-clone/base-leader-personality/Rules/Player/Expansion';
 import MilitaryUnhappinessTolerance from '@civ-clone/base-leader-personality/Rules/Player/MilitaryUnhappinessTolerance';
@@ -39,13 +40,21 @@ import ScienceBias from '@civ-clone/base-leader-personality/Rules/Player/Science
 import Trait from '@civ-clone/core-civilization/Trait';
 import TraitRegistry from '@civ-clone/core-civilization/TraitRegistry';
 import WantedAdvances from '@civ-clone/base-leader-personality/Rules/Player/WantedAdvances';
+import Unit from '@civ-clone/core-unit/Unit';
 import Wonder from '@civ-clone/core-wonder/Wonder';
+import Worker from '@civ-clone/base-unit-type-worker/Worker';
 import advanceGrades from './AdvanceGrades';
 import leaderHas from '@civ-clone/base-leader-personality/lib/leaderHas';
 
 const isImprovement = (item: object): boolean =>
   Object.prototype.isPrototypeOf.call(CityImprovement, item) &&
   !Object.prototype.isPrototypeOf.call(Wonder, item);
+
+// A unit built to fight: not Settlers or another worker, and not a Diplomat or Caravan.
+const isMilitary = (item: object): boolean =>
+  Object.prototype.isPrototypeOf.call(Unit, item) &&
+  !Object.prototype.isPrototypeOf.call(Worker, item) &&
+  !Object.prototype.isPrototypeOf.call(Diplomatic, item);
 
 const gradesByAdvance = new Map<typeof Advance, [number, number]>(
   advanceGrades.map(([AdvanceType, base, ideology]) => [
@@ -130,12 +139,20 @@ export const personalityRules = (traitRegistry: TraitRegistry): Rule[] => {
 
     // Improvements. v474.05's production menu multiplies an improvement's score by 3 / (Ideology + 3), and builds
     //  the lowest, so a Civilized leader favours them by 4/3 and a Militaristic one by 2/3. Wonders aren't scaled.
+    //  Military units are weighed the other way, (3 − Ideology) / 3, which v474.05 doesn't do: its scores sit close
+    //  together, but here a unit a computer player needs outscores any improvement it doesn't by far more than 4/3,
+    //  so the lean only showed once units leant too (civ-clone/web-renderer#378). Settlers (`Expansion`), Diplomats
+    //  and Caravans aren't scaled.
     ...ideologies.map(
       ([TraitType, ideology]) =>
         new BuildWeight(
           has(TraitType),
           new Effect((player: Player, item: object): number =>
-            isImprovement(item) ? (ideology + 3) / 3 : 1
+            isImprovement(item)
+              ? (ideology + 3) / 3
+              : isMilitary(item)
+              ? (3 - ideology) / 3
+              : 1
           )
         )
     ),
