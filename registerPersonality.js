@@ -17,6 +17,7 @@ const Diplomatic_1 = require("@civ-clone/base-unit-type-diplomatic/Diplomatic");
 const Effect_1 = require("@civ-clone/core-rule/Effect");
 const Expansion_1 = require("@civ-clone/base-leader-personality/Rules/Player/Expansion");
 const MilitaryUnhappinessTolerance_1 = require("@civ-clone/base-leader-personality/Rules/Player/MilitaryUnhappinessTolerance");
+const PollutionConcern_1 = require("@civ-clone/base-leader-personality/Rules/Player/PollutionConcern");
 const ScienceBias_1 = require("@civ-clone/base-leader-personality/Rules/Player/ScienceBias");
 const WantedAdvances_1 = require("@civ-clone/base-leader-personality/Rules/Player/WantedAdvances");
 const Unit_1 = require("@civ-clone/core-unit/Unit");
@@ -99,6 +100,13 @@ const personalityRules = (traitRegistry) => {
         //  view of its own: by 1.25 if Aggressive, 0.9 if Friendly.
         new AttackConfidence_1.default(has(Traits_1.Aggressive), new Effect_1.default(() => 1.25)),
         new AttackConfidence_1.default(has(Traits_1.Friendly), new Effect_1.default(() => 0.9)),
+        // Pollution. v474.05's AI cleans up pollution it finds under a worker (`AIEngine.cs` ~L1330), whatever the leader.
+        //  Here the leader decides how keen it is (civ-clone/web-renderer#366): Civilized leaders by 1.5 and Friendly ones
+        //  by 1.25, Militaristic and Aggressive ones by 0.75.
+        new PollutionConcern_1.default(has(Traits_1.Civilized), new Effect_1.default(() => 1.5)),
+        new PollutionConcern_1.default(has(Traits_1.Friendly), new Effect_1.default(() => 1.25)),
+        new PollutionConcern_1.default(has(Traits_1.Militaristic), new Effect_1.default(() => 0.75)),
+        new PollutionConcern_1.default(has(Traits_1.Aggressive), new Effect_1.default(() => 0.75)),
     ];
 };
 exports.personalityRules = personalityRules;

@@ -31,6 +31,7 @@ import AttackConfidence from '@civ-clone/base-leader-personality/Rules/Player/At
 import BuildWeight from '@civ-clone/base-leader-personality/Rules/Player/BuildWeight';
 import Civilization from '@civ-clone/core-civilization/Civilization';
 import Expansion from '@civ-clone/base-leader-personality/Rules/Player/Expansion';
+import PollutionConcern from '@civ-clone/base-leader-personality/Rules/Player/PollutionConcern';
 import Leader from '@civ-clone/core-civilization/Leader';
 import MilitaryUnhappinessTolerance from '@civ-clone/base-leader-personality/Rules/Player/MilitaryUnhappinessTolerance';
 import Player from '@civ-clone/core-player/Player';
@@ -110,6 +111,19 @@ describe('Civ1 personalities', (): void => {
     expect(product(ruleRegistry, Expansion, gandhi)).closeTo(1 / 3, 1e-9);
     expect(product(ruleRegistry, Expansion, elizabeth)).closeTo(5 / 3, 1e-9);
     expect(product(ruleRegistry, Expansion, lincoln)).closeTo(6 / 5, 1e-9);
+  });
+
+  it('minds pollution by Ideology and Mood', (): void => {
+    expect(product(ruleRegistry, PollutionConcern, genghisKhan)).closeTo(
+      0.75 * 0.75,
+      1e-9
+    );
+    expect(product(ruleRegistry, PollutionConcern, gandhi)).equal(1.25);
+    expect(product(ruleRegistry, PollutionConcern, lincoln)).closeTo(
+      1.5 * 1.25,
+      1e-9
+    );
+    expect(product(ruleRegistry, PollutionConcern, elizabeth)).equal(1);
   });
 
   it('weighs improvements and military units, not Wonders, Settlers or Caravans, by Ideology', (): void => {
