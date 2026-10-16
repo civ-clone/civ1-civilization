@@ -35,6 +35,7 @@ import Effect from '@civ-clone/core-rule/Effect';
 import Expansion from '@civ-clone/base-leader-personality/Rules/Player/Expansion';
 import MilitaryUnhappinessTolerance from '@civ-clone/base-leader-personality/Rules/Player/MilitaryUnhappinessTolerance';
 import Player from '@civ-clone/core-player/Player';
+import PollutionConcern from '@civ-clone/base-leader-personality/Rules/Player/PollutionConcern';
 import Rule from '@civ-clone/core-rule/Rule';
 import ScienceBias from '@civ-clone/base-leader-personality/Rules/Player/ScienceBias';
 import Trait from '@civ-clone/core-civilization/Trait';
@@ -181,6 +182,14 @@ export const personalityRules = (traitRegistry: TraitRegistry): Rule[] => {
     //  view of its own: by 1.25 if Aggressive, 0.9 if Friendly.
     new AttackConfidence(has(Aggressive), new Effect(() => 1.25)),
     new AttackConfidence(has(Friendly), new Effect(() => 0.9)),
+
+    // Pollution. v474.05's AI cleans up pollution it finds under a worker (`AIEngine.cs` ~L1330), whatever the leader.
+    //  Here the leader decides how keen it is (civ-clone/web-renderer#366): Civilized leaders by 1.5 and Friendly ones
+    //  by 1.25, Militaristic and Aggressive ones by 0.75.
+    new PollutionConcern(has(Civilized), new Effect(() => 1.5)),
+    new PollutionConcern(has(Friendly), new Effect(() => 1.25)),
+    new PollutionConcern(has(Militaristic), new Effect(() => 0.75)),
+    new PollutionConcern(has(Aggressive), new Effect(() => 0.75)),
   ];
 };
 
