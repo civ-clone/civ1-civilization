@@ -11,6 +11,7 @@ const Traits_1 = require("./Traits");
 const Advances_1 = require("@civ-clone/civ1-science/Advances");
 const AdvanceGrade_1 = require("@civ-clone/base-leader-personality/Rules/Player/AdvanceGrade");
 const ArmySize_1 = require("@civ-clone/base-leader-personality/Rules/Player/ArmySize");
+const OverseasSettlers_1 = require("@civ-clone/base-leader-personality/Rules/Player/OverseasSettlers");
 const AttackConfidence_1 = require("@civ-clone/base-leader-personality/Rules/Player/AttackConfidence");
 const BuildWeight_1 = require("@civ-clone/base-leader-personality/Rules/Player/BuildWeight");
 const CityImprovement_1 = require("@civ-clone/core-city-improvement/CityImprovement");
@@ -101,6 +102,9 @@ const personalityRules = (traitRegistry) => {
         //  view of its own: by 1.25 if Aggressive, 0.9 if Friendly.
         new AttackConfidence_1.default(has(Traits_1.Aggressive), new Effect_1.default(() => 1.25)),
         new AttackConfidence_1.default(has(Traits_1.Friendly), new Effect_1.default(() => 0.9)),
+        // Settling overseas: an Expansionist leader sends half its city founders overseas once its landmass is filling up
+        //  (civ-clone/web-renderer#374, Dom); the others, like everyone else's, go once it's full.
+        new OverseasSettlers_1.default(has(Traits_1.Expansionist), new Effect_1.default(() => 0.5)),
         // The army. v474.05 builds units by its continent's strategy, and personality only touches Settlers and
         //  improvements. Here Ideology also sizes the army by the situation (civ-clone/web-renderer#424): a Militaristic
         //  leader keeps twice the attackers while it has a weaker rival in reach, and a Civilized leader half as many while
