@@ -10,6 +10,7 @@ exports.register = exports.personalityRules = void 0;
 const Traits_1 = require("./Traits");
 const Advances_1 = require("@civ-clone/civ1-science/Advances");
 const AdvanceGrade_1 = require("@civ-clone/base-leader-personality/Rules/Player/AdvanceGrade");
+const ArmySize_1 = require("@civ-clone/base-leader-personality/Rules/Player/ArmySize");
 const AttackConfidence_1 = require("@civ-clone/base-leader-personality/Rules/Player/AttackConfidence");
 const BuildWeight_1 = require("@civ-clone/base-leader-personality/Rules/Player/BuildWeight");
 const CityImprovement_1 = require("@civ-clone/core-city-improvement/CityImprovement");
@@ -100,6 +101,12 @@ const personalityRules = (traitRegistry) => {
         //  view of its own: by 1.25 if Aggressive, 0.9 if Friendly.
         new AttackConfidence_1.default(has(Traits_1.Aggressive), new Effect_1.default(() => 1.25)),
         new AttackConfidence_1.default(has(Traits_1.Friendly), new Effect_1.default(() => 0.9)),
+        // The army. v474.05 builds units by its continent's strategy, and personality only touches Settlers and
+        //  improvements. Here Ideology also sizes the army by the situation (civ-clone/web-renderer#424): a Militaristic
+        //  leader keeps twice the attackers while it has a weaker rival in reach, and a Civilized leader half as many while
+        //  it has none.
+        new ArmySize_1.default(has(Traits_1.Militaristic), new Effect_1.default((player, rival) => rival === null ? 1 : 2)),
+        new ArmySize_1.default(has(Traits_1.Civilized), new Effect_1.default((player, rival) => rival === null ? 0.5 : 1)),
         // Pollution. v474.05's AI cleans up pollution it finds under a worker (`AIEngine.cs` ~L1330), whatever the leader.
         //  Here the leader decides how keen it is (civ-clone/web-renderer#366): Civilized leaders by 1.5 and Friendly ones
         //  by 1.25, Militaristic and Aggressive ones by 0.75.
