@@ -11,7 +11,6 @@ export const registerCityNames: (
   // List taken from Civ 1 and Civ 2 city names combined and sorted
   (
     [
-      'Bergen',
       'Cannae',
       'Capua',
       'Cordoba',
@@ -25,7 +24,6 @@ export const registerCityNames: (
       'Issus',
       'Lisbon',
       'Mecca',
-      'Melbourne',
       'Milan',
       'Naples',
       'Pisa',
@@ -34,7 +32,6 @@ export const registerCityNames: (
       'Salzburg',
       'Seville',
       'Sidon',
-      'Sydney',
       'Tarsus',
       'Toronto',
       'Turin',
