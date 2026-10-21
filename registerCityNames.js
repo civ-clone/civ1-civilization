@@ -6,7 +6,6 @@ const CityNameRegistry_1 = require("@civ-clone/core-civilization/CityNameRegistr
 const registerCityNames = (cityNameRegistry = CityNameRegistry_1.instance) => {
     // List taken from Civ 1 and Civ 2 city names combined and sorted
     [
-        'Bergen',
         'Cannae',
         'Capua',
         'Cordoba',
@@ -20,7 +19,6 @@ const registerCityNames = (cityNameRegistry = CityNameRegistry_1.instance) => {
         'Issus',
         'Lisbon',
         'Mecca',
-        'Melbourne',
         'Milan',
         'Naples',
         'Pisa',
@@ -29,7 +27,6 @@ const registerCityNames = (cityNameRegistry = CityNameRegistry_1.instance) => {
         'Salzburg',
         'Seville',
         'Sidon',
-        'Sydney',
         'Tarsus',
         'Toronto',
         'Turin',
