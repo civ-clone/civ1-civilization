@@ -36,6 +36,7 @@ exports.advanceGrades = [
     [Advances_1.Feudalism, 5, -1],
     [Advances_1.Flight, 4, -1],
     [Advances_1.FusionPower, 3, 0],
+    [Advances_1.FutureTechnology, 0, 0],
     [Advances_1.GeneticEngineering, 2, 2],
     [Advances_1.Gunpowder, 8, -2],
     [Advances_1.HorsebackRiding, 4, -1],
