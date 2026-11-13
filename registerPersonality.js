@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.register = exports.personalityRules = void 0;
+exports.register = exports.personalityRules = exports.isMilitary = void 0;
 // Civ1: what each leader's personality makes a computer player do (civ-clone/web-renderer#157), as the
 //  `base-leader-personality` rules for the traits `registerTraits` gives the leaders.
 //
@@ -19,20 +19,30 @@ const Diplomatic_1 = require("@civ-clone/base-unit-type-diplomatic/Diplomatic");
 const Effect_1 = require("@civ-clone/core-rule/Effect");
 const Expansion_1 = require("@civ-clone/base-leader-personality/Rules/Player/Expansion");
 const MilitaryUnhappinessTolerance_1 = require("@civ-clone/base-leader-personality/Rules/Player/MilitaryUnhappinessTolerance");
+const NonCombatant_1 = require("@civ-clone/base-unit-trait-non-combatant/NonCombatant");
 const PollutionConcern_1 = require("@civ-clone/base-leader-personality/Rules/Player/PollutionConcern");
 const ScienceBias_1 = require("@civ-clone/base-leader-personality/Rules/Player/ScienceBias");
+const Terraforms_1 = require("@civ-clone/base-unit-trait-terraforms/Terraforms");
 const WantedAdvances_1 = require("@civ-clone/base-leader-personality/Rules/Player/WantedAdvances");
 const Unit_1 = require("@civ-clone/core-unit/Unit");
 const Wonder_1 = require("@civ-clone/core-wonder/Wonder");
 const Worker_1 = require("@civ-clone/base-unit-type-worker/Worker");
 const AdvanceGrades_1 = require("./AdvanceGrades");
+const traits_1 = require("@civ-clone/core-unit/traits");
 const leaderHas_1 = require("@civ-clone/base-leader-personality/lib/leaderHas");
 const isImprovement = (item) => Object.prototype.isPrototypeOf.call(CityImprovement_1.default, item) &&
     !Object.prototype.isPrototypeOf.call(Wonder_1.default, item);
-// A unit built to fight: not Settlers or another worker, and not a Diplomat or Caravan.
-const isMilitary = (item) => Object.prototype.isPrototypeOf.call(Unit_1.default, item) &&
-    !Object.prototype.isPrototypeOf.call(Worker_1.default, item) &&
-    !Object.prototype.isPrototypeOf.call(Diplomatic_1.default, item);
+// A unit built to fight: not Settlers or another worker (`Terraforms`), and not a Diplomat or Caravan (`NonCombatant`),
+//  as `ruleRegistry`, the game's rules, declare them. A build item is a class, which has no rules of its own to ask.
+//  Without them, the `Worker` and `Diplomatic` classes, as before unit traits: never another registry, which would
+//  silently find no traits and count Settlers as military.
+const isMilitary = (item, ruleRegistry) => Object.prototype.isPrototypeOf.call(Unit_1.default, item) &&
+    (ruleRegistry === undefined
+        ? !Object.prototype.isPrototypeOf.call(Worker_1.default, item) &&
+            !Object.prototype.isPrototypeOf.call(Diplomatic_1.default, item)
+        : !(0, traits_1.hasTrait)(item, Terraforms_1.default, ruleRegistry) &&
+            !(0, traits_1.hasTrait)(item, NonCombatant_1.default, ruleRegistry));
+exports.isMilitary = isMilitary;
 const gradesByAdvance = new Map(AdvanceGrades_1.default.map(([AdvanceType, base, ideology]) => [
     AdvanceType,
     [base, ideology],
@@ -43,7 +53,11 @@ const ideologies = [
     [Traits_1.Militaristic, -1],
 ];
 const productiveAndClean = [Advances_1.Recycling, Advances_1.NuclearPower];
-const personalityRules = (traitRegistry) => {
+/**
+ * The rules for the leaders' traits in `traitRegistry`. `ruleRegistry`, the game's rules, says which build items are
+ *  military units, by their unit traits; without it, by their classes.
+ */
+const personalityRules = (traitRegistry, ruleRegistry) => {
     const has = (TraitType) => (0, leaderHas_1.default)(traitRegistry, TraitType);
     return [
         // Rates: science is Ideology + (10 − luxuries) / 2, and starts at Ideology + 3 (`Segment_1ade.cs` `F0_1ade_0006`,
@@ -90,7 +104,7 @@ const personalityRules = (traitRegistry) => {
         //  and Caravans aren't scaled.
         ...ideologies.map(([TraitType, ideology]) => new BuildWeight_1.default(has(TraitType), new Effect_1.default((player, item) => isImprovement(item)
             ? (ideology + 3) / 3
-            : isMilitary(item)
+            : (0, exports.isMilitary)(item, ruleRegistry)
                 ? (3 - ideology) / 3
                 : 1))),
         // Research: v474.05 grades each advance `base` + Ideology × `ideology` (`AdvanceGrades`).
@@ -121,7 +135,7 @@ const personalityRules = (traitRegistry) => {
     ];
 };
 exports.personalityRules = personalityRules;
-const register = (game) => game.rules.register(...(0, exports.personalityRules)(game.traits));
+const register = (game) => game.rules.register(...(0, exports.personalityRules)(game.traits, game.rules));
 exports.register = register;
 exports.default = exports.register;
 //# sourceMappingURL=registerPersonality.js.map

@@ -46,8 +46,11 @@ import Unit from '@civ-clone/core-unit/Unit';
 import Worker from '@civ-clone/base-unit-type-worker/Worker';
 import advanceGrades from '../AdvanceGrades';
 import { expect } from 'chai';
-import { personalityRules } from '../registerPersonality';
+import { isMilitary, personalityRules } from '../registerPersonality';
 import registerTraits from '../registerTraits';
+import NonCombatant from '@civ-clone/base-unit-trait-non-combatant/NonCombatant';
+import Terraforms from '@civ-clone/base-unit-trait-terraforms/Terraforms';
+import { unitTraits } from '@civ-clone/core-unit/Rules/UnitTraits';
 
 class Temple extends CityImprovement {}
 class Pyramids extends Wonder {}
@@ -59,7 +62,12 @@ const traitRegistry = new TraitRegistry(),
   ruleRegistry = new RuleRegistry();
 
 registerTraits(traitRegistry);
-ruleRegistry.register(...personalityRules(traitRegistry));
+ruleRegistry.register(
+  ...personalityRules(traitRegistry, ruleRegistry),
+  // What the game's unit package declares for these types, as civ1-unit does for its own (`Rules/Unit/traits`).
+  ...unitTraits('civ1-civilization:test/unit/trait', Settlers, Terraforms),
+  ...unitTraits('civ1-civilization:test/unit/trait', Caravan, NonCombatant)
+);
 
 const playerFor = (LeaderType: typeof Leader): Player => {
   const player = new Player(),
@@ -148,6 +156,32 @@ describe('Civ1 personalities', (): void => {
     expect(product(ruleRegistry, BuildWeight, gandhi, Militia)).equal(1);
     expect(product(ruleRegistry, BuildWeight, genghisKhan, Settlers)).equal(1);
     expect(product(ruleRegistry, BuildWeight, lincoln, Caravan)).equal(1);
+  });
+
+  // A military unit was one that isn't a `Worker` or `Diplomatic`, before it was one that doesn't `Terraforms` and isn't
+  //  `NonCombatant` (civ1-unit's `tests/traitEquivalence`, "isMilitary", checks the two agree for all 28 Civ1 types).
+  //  Without the game's rules it still asks the classes.
+  it('tells military units by their traits in the game rules, and by their classes without them', (): void => {
+    const classRules = new RuleRegistry();
+
+    classRules.register(...personalityRules(traitRegistry));
+
+    [ruleRegistry, undefined].forEach((rules): void => {
+      expect(isMilitary(Militia, rules)).true;
+      expect(isMilitary(Settlers, rules)).false;
+      expect(isMilitary(Caravan, rules)).false;
+      expect(isMilitary(Temple, rules)).false;
+    });
+
+    // Rules with no unit traits declared would count every unit as military: why there is no default registry.
+    expect(isMilitary(Settlers, new RuleRegistry())).true;
+
+    expect(product(classRules, BuildWeight, lincoln, Militia)).closeTo(
+      2 / 3,
+      1e-9
+    );
+    expect(product(classRules, BuildWeight, genghisKhan, Settlers)).equal(1);
+    expect(product(classRules, BuildWeight, lincoln, Caravan)).equal(1);
   });
 
   it("grades advances by v474.05's table", (): void => {
