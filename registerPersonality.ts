@@ -36,10 +36,13 @@ import Diplomatic from '@civ-clone/base-unit-type-diplomatic/Diplomatic';
 import Effect from '@civ-clone/core-rule/Effect';
 import Expansion from '@civ-clone/base-leader-personality/Rules/Player/Expansion';
 import MilitaryUnhappinessTolerance from '@civ-clone/base-leader-personality/Rules/Player/MilitaryUnhappinessTolerance';
+import NonCombatant from '@civ-clone/base-unit-trait-non-combatant/NonCombatant';
 import Player from '@civ-clone/core-player/Player';
 import PollutionConcern from '@civ-clone/base-leader-personality/Rules/Player/PollutionConcern';
 import Rule from '@civ-clone/core-rule/Rule';
+import RuleRegistry from '@civ-clone/core-rule/RuleRegistry';
 import ScienceBias from '@civ-clone/base-leader-personality/Rules/Player/ScienceBias';
+import Terraforms from '@civ-clone/base-unit-trait-terraforms/Terraforms';
 import Trait from '@civ-clone/core-civilization/Trait';
 import TraitRegistry from '@civ-clone/core-civilization/TraitRegistry';
 import WantedAdvances from '@civ-clone/base-leader-personality/Rules/Player/WantedAdvances';
@@ -47,17 +50,27 @@ import Unit from '@civ-clone/core-unit/Unit';
 import Wonder from '@civ-clone/core-wonder/Wonder';
 import Worker from '@civ-clone/base-unit-type-worker/Worker';
 import advanceGrades from './AdvanceGrades';
+import { hasTrait } from '@civ-clone/core-unit/traits';
 import leaderHas from '@civ-clone/base-leader-personality/lib/leaderHas';
 
 const isImprovement = (item: object): boolean =>
   Object.prototype.isPrototypeOf.call(CityImprovement, item) &&
   !Object.prototype.isPrototypeOf.call(Wonder, item);
 
-// A unit built to fight: not Settlers or another worker, and not a Diplomat or Caravan.
-const isMilitary = (item: object): boolean =>
+// A unit built to fight: not Settlers or another worker (`Terraforms`), and not a Diplomat or Caravan (`NonCombatant`),
+//  as `ruleRegistry`, the game's rules, declare them. A build item is a class, which has no rules of its own to ask.
+//  Without them, the `Worker` and `Diplomatic` classes, as before unit traits: never another registry, which would
+//  silently find no traits and count Settlers as military.
+export const isMilitary = (
+  item: object,
+  ruleRegistry?: RuleRegistry
+): boolean =>
   Object.prototype.isPrototypeOf.call(Unit, item) &&
-  !Object.prototype.isPrototypeOf.call(Worker, item) &&
-  !Object.prototype.isPrototypeOf.call(Diplomatic, item);
+  (ruleRegistry === undefined
+    ? !Object.prototype.isPrototypeOf.call(Worker, item) &&
+      !Object.prototype.isPrototypeOf.call(Diplomatic, item)
+    : !hasTrait(item as typeof Unit, Terraforms, ruleRegistry) &&
+      !hasTrait(item as typeof Unit, NonCombatant, ruleRegistry));
 
 const gradesByAdvance = new Map<typeof Advance, [number, number]>(
   advanceGrades.map(([AdvanceType, base, ideology]) => [
@@ -74,7 +87,14 @@ const ideologies: [typeof Trait, number][] = [
 
 const productiveAndClean = [Recycling, NuclearPower] as (typeof Advance)[];
 
-export const personalityRules = (traitRegistry: TraitRegistry): Rule[] => {
+/**
+ * The rules for the leaders' traits in `traitRegistry`. `ruleRegistry`, the game's rules, says which build items are
+ *  military units, by their unit traits; without it, by their classes.
+ */
+export const personalityRules = (
+  traitRegistry: TraitRegistry,
+  ruleRegistry?: RuleRegistry
+): Rule[] => {
   const has = <C extends [Player, ...any[]]>(TraitType: typeof Trait) =>
     leaderHas<C>(traitRegistry, TraitType);
 
@@ -153,7 +173,7 @@ export const personalityRules = (traitRegistry: TraitRegistry): Rule[] => {
           new Effect((player: Player, item: object): number =>
             isImprovement(item)
               ? (ideology + 3) / 3
-              : isMilitary(item)
+              : isMilitary(item, ruleRegistry)
               ? (3 - ideology) / 3
               : 1
           )
@@ -217,6 +237,6 @@ export const personalityRules = (traitRegistry: TraitRegistry): Rule[] => {
 };
 
 export const register = (game: Game): void =>
-  game.rules.register(...personalityRules(game.traits));
+  game.rules.register(...personalityRules(game.traits, game.rules));
 
 export default register;
